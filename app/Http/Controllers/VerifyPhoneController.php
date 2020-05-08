@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use App\VerifyPhone;
+use App\User;
 
 class VerifyPhoneController extends Controller
 {
@@ -78,9 +80,17 @@ class VerifyPhoneController extends Controller
             //check if code is valid
             if($request->code == $record->code){
                 $record->delete();
-                return response()->json([
-                    'message' => 'code is correct'
-                ],200);
+                // sign up user or create a api code for user and send informations
+                //$request->user_type == {
+                //  USER,COUNSELOR
+                //}
+                if($request->user_type == 'USER'){
+                    $user = User::firstOrNew(array( 'phone'=>$request->phone ));
+                    $api_token = Str::random(60);
+                    $user->api_token = $api_token;
+                    $user->save();
+                    return $user;
+                }
             }else{
                 return response()->json([
                     'message' => 'incorrect code'
