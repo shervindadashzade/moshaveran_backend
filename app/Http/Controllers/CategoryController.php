@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Category;
+use App\SubCategory;
 
 class CategoryController extends Controller
 {
@@ -57,6 +58,104 @@ class CategoryController extends Controller
 
         return $sub;
     }
+
+    public function editCategory(Request $request){
+        $validator = Validator::make($request->all(),[
+            'cat_id' => 'required | numeric',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'invalid forms of data',
+                'errors' => $validator->errors()->all()
+            ],400);
+        }
+
+        $cat = Category::find($request->cat_id);
+        if($cat == null){
+            return response()->json([
+                'message' => 'category not founded'
+            ],404);
+        }else{
+            $cat->update($request->all());
+            return $cat;
+        }
+    }
+
+    public function editSubCategory(Request $request){
+        $validator = Validator::make($request->all(),[
+            'subcat_id' => 'required | numeric',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'invalid forms of data',
+                'errors' => $validator->errors()->all()
+            ],400);
+        }
+
+        $cat = SubCategory::find($request->subcat_id);
+        if($cat == null){
+            return response()->json([
+                'message' => 'subcategory not founded'
+            ],404);
+        }else{
+            $cat->update($request->all());
+            return $cat;
+        }
+    }
+    
+    public function deleteCategory(Request $request){
+        $validator = Validator::make($request->all(),[
+            'cat_id' => 'required | numeric',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'invalid forms of data',
+                'errors' => $validator->errors()->all()
+            ],400);
+        }
+
+        $cat = Category::find($request->cat_id);
+        if($cat == null){
+            return response()->json([
+                'message' => 'category not founded'
+            ],404);
+        }else{
+            $cat->subCategories()->delete();
+            $cat->delete();
+            return response()->json([
+                'message' => 'category successfully removed'
+            ],200);
+        }
+    }
+
+    public function deleteSubCategory(Request $request){
+        $validator = Validator::make($request->all(),[
+            'subcat_id' => 'required | numeric',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'invalid forms of data',
+                'errors' => $validator->errors()->all()
+            ],400);
+        }
+
+        $cat = SubCategory::find($request->subcat_id);
+        if($cat == null){
+            return response()->json([
+                'message' => 'subcategory not founded'
+            ],404);
+        }else{
+            $cat->delete();
+            return response()->json([
+                'message' => 'subcategory successfully removed'
+            ],200);
+        }
+    }
+
 
     public function index(Request $request){
         $categories = Category::all();

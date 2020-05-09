@@ -23,8 +23,14 @@ Route::post('/verify_sms','VerifyPhoneController@verify_sms');
 Route::post('/admin/login','AdminController@login');
 Route::middleware(AdminMid::class)->group(function (){
     Route::post('/admin/logout','AdminController@logout');
+    // category managment
     Route::post('/category','CategoryController@addCategory');
+    Route::put('/category','CategoryController@editCategory');
+    Route::delete('/category','CategoryController@deleteCategory');
+    // subCategory managment
     Route::post('/subCategory','CategoryController@addSubCategory');
+    Route::put('/subCategory','CategoryController@editSubCategory');
+    Route::delete('/subCategory','CategoryController@deleteSubCategory');
 });
 
 // category routes
