@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\AdminMid;
+use App\Http\Middleware\CounselorMid;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -19,6 +20,10 @@ use App\Http\Middleware\AdminMid;
 Route::post('/send_sms','VerifyPhoneController@send_sms');
 Route::post('/verify_sms','VerifyPhoneController@verify_sms');
 
+// category routes
+Route::get('/category','CategoryController@index');
+Route::get('/category/counselor','CategoryController@indexCounselors');
+
 //admins routes
 Route::post('/admin/login','AdminController@login');
 Route::middleware(AdminMid::class)->group(function (){
@@ -33,5 +38,6 @@ Route::middleware(AdminMid::class)->group(function (){
     Route::delete('/subCategory','CategoryController@deleteSubCategory');
 });
 
-// category routes
-Route::get('/category','CategoryController@index');
+Route::middleware(CounselorMid::class)->group(function(){
+    Route::post('/counselor','CounselorController@complete');
+});

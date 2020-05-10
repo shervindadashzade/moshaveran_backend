@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use App\VerifyPhone;
 use App\User;
+use App\Counselor;
 
 class VerifyPhoneController extends Controller
 {
@@ -86,6 +87,13 @@ class VerifyPhoneController extends Controller
                 //}
                 if($request->user_type == 'USER'){
                     $user = User::firstOrNew(array( 'phone'=>$request->phone ));
+                    $api_token = Str::random(60);
+                    $user->api_token = $api_token;
+                    $user->save();
+                    return $user;
+                }
+                if($request->user_type == 'COUNSELOR'){
+                    $user = Counselor::firstOrNew(array('phone'=>$request->phone));
                     $api_token = Str::random(60);
                     $user->api_token = $api_token;
                     $user->save();

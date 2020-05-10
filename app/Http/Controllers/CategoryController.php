@@ -171,4 +171,26 @@ class CategoryController extends Controller
 
         return $response;
     }
+
+    public function indexCounselors(Request $request){
+        $validator = Validator::make($request->all(),[
+            'subcat_id' => 'required | numeric',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'message' => 'invalid forms of data',
+                'errors' => $validator->errors()->all()
+            ],400);
+        }
+
+        $subCat = SubCategory::find($request->subcat_id);
+        if($subCat == null){
+            return response()->json([
+                'message' => 'no subcategry founded'
+            ],400); 
+        }else{
+            return $subCat->counselors()->get();
+        }
+    }
 }

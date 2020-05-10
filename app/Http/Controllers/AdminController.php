@@ -46,6 +46,12 @@ class AdminController extends Controller
     }
 
     public function logout(Request $request){
-        return $request->user;
+        $user = $request->user;
+        $user->api_token = null;
+        $user->save();
+        return response()->json([
+            'message' => 'logout successfully'
+        ],200);
     }
+
 }
